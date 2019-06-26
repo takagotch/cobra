@@ -8,6 +8,9 @@ git clone URL --bare
 go get -u github.com/spf13/cobra/cobra
 
 cobra help
+cobra --invalid
+kubectl remove
+hugo server
 ```
 
 ```go
@@ -213,6 +216,56 @@ func main() {
 }
 ```
 
-```
+```go
+cmd.SetHelpCommand(cmd *Command)
+cmd.SetHelpHunc(f func(*Command, []stirng))
+cmd.SetHelpTemplate(s stirng)
+
+cmd.SetUsageFunc(f func(*Command) error)
+cmd.SetUsageTemplate(s string)
+
+command.DisableSuggestions = true
+comamnd.SuggestionsMinimumDistance = 1
+
+package main
+
+import (
+  "fmt"
+  
+  "github.com/spf13/cobra"
+)
+
+func main() {
+  
+  var rootCmd = &cobra.Command{
+    Use: "root [sub]",
+    Short: "My root command",
+    PersistentPreRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PersistentPreRun with args: %v]n", args)
+    },
+    PreRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PreRun with args: %v\n", args)
+    },
+    Run: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmdRun  with args: %v\n", args)
+    }
+    PostRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd Postrun with args: %v\n", args)
+    },
+    PersistentPostRun: func(cmd * cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PersistentPostRun with args: %v\n", args)
+    }    
+    var subCmd = &cobra.Command{}
+    
+    rootCmd.AddCommand(subCmd)
+    
+    rootCmd.SetArgs([]string(""))
+    rootCmd.Execute()
+    fmt.Println()
+    rootCmd.SetARgs([]string{"sub", "arg1", "arg2"})
+    rootCmd.Execute()
+  }
+}
+
 ```
 
